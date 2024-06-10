@@ -1,0 +1,405 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>water_quality</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2024-05-31">
+<meta name="DC.source" content="water_quality.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<pre class="codeinput">
+<span class="keyword">function</span> get_water_data1()
+    <span class="comment">% Define the drinking water standards</span>
+    standards = struct(<span class="string">'pH'</span>, [6.5, 8.5], <span class="string">'turbidity'</span>, 1, <span class="string">'tds'</span>, 500, <span class="keyword">...</span>
+                       <span class="string">'hardness'</span>, 200, <span class="string">'sulphates'</span>, 200, <span class="keyword">...</span>
+                       <span class="string">'bod'</span>, 5, <span class="string">'cod'</span>, 10, <span class="string">'do'</span>, [6.5, 8], <span class="keyword">...</span>
+                       <span class="string">'nitrate'</span>, 10, <span class="string">'alkalinity'</span>, 200);
+
+    <span class="keyword">while</span> true
+        choice = menu(<span class="string">'Select an option:'</span>, <span class="keyword">...</span>
+                      <span class="string">'Import data from an Excel file'</span>, <span class="keyword">...</span>
+                      <span class="string">'Enter data manually'</span>, <span class="keyword">...</span>
+                      <span class="string">'Exit'</span>);
+
+        <span class="keyword">switch</span> choice
+            <span class="keyword">case</span> 1
+                [filename, pathname] = uigetfile({<span class="string">'*.xlsx'</span>,<span class="string">'Excel files (*.xlsx)'</span>},<span class="string">'Select an Excel file'</span>);
+                <span class="keyword">if</span> isequal(filename,0) || isequal(pathname,0)
+                    disp(<span class="string">'User canceled the operation'</span>);
+                    <span class="keyword">continue</span>;
+                <span class="keyword">end</span>
+                fullpath = fullfile(pathname, filename);
+                imported_data = readtable(fullpath);
+                water_data = table2struct(imported_data, <span class="string">'ToScalar'</span>, true);
+            <span class="keyword">case</span> 2
+                water_data = struct();
+                prompt = {<span class="string">'pH value:'</span>, <span class="string">'Turbidity (NTU):'</span>, <span class="string">'Total Dissolved Solids (mg/l):'</span>, <span class="keyword">...</span>
+                          <span class="string">'Total Hardness (as CaCO3, mg/l):'</span>, <span class="string">'Sulphates (mg/l):'</span>, <span class="keyword">...</span>
+                          <span class="string">'BOD (mg/l):'</span>, <span class="string">'COD (mg/l):'</span>, <span class="string">'DO (mg/l):'</span>, <span class="keyword">...</span>
+                          <span class="string">'Nitrate (mg/l):'</span>, <span class="string">'Total Alkalinity (as CaCO3, mg/l):'</span>};
+                dlg_title = <span class="string">'Enter Data'</span>;
+                num_lines = 1;
+                default_data = {<span class="string">''</span>, <span class="string">''</span>, <span class="string">''</span>, <span class="string">''</span>, <span class="string">''</span>, <span class="string">''</span>, <span class="string">''</span>, <span class="string">''</span>, <span class="string">''</span>, <span class="string">''</span>};
+                input_data = inputdlg(prompt, dlg_title, num_lines, default_data);
+
+                <span class="comment">% Convert input data to numeric values</span>
+                <span class="keyword">for</span> i = 1:numel(input_data)
+                    water_data.(lower(strrep(prompt{i}, <span class="string">' '</span>, <span class="string">'_'</span>))) = str2double(input_data{i});
+                <span class="keyword">end</span>
+            <span class="keyword">case</span> 3
+                fprintf(<span class="string">'Exiting the program.\n'</span>);
+                <span class="keyword">return</span>;
+        <span class="keyword">end</span>
+
+        save(<span class="string">'water_data.mat'</span>, <span class="string">'water_data'</span>);
+        is_safe = true;
+
+        <span class="comment">% Perform checks...</span>
+
+        <span class="keyword">if</span> is_safe
+            msgbox(<span class="string">'The water meets all the drinking water standards and is considered safe for drinking.'</span>, <span class="string">'Success'</span>, <span class="string">'modal'</span>);
+            result = <span class="string">'Safe'</span>;
+        <span class="keyword">else</span>
+            msgbox(<span class="string">'The water does not meet one or more drinking water standards and is not considered safe for drinking.'</span>, <span class="string">'Warning'</span>, <span class="string">'modal'</span>);
+            result = <span class="string">'Not Safe'</span>;
+        <span class="keyword">end</span>
+
+        save_to_excel = questdlg(<span class="string">'Do you want to save the data to an Excel file?'</span>, <span class="string">'Save to Excel'</span>, <span class="string">'Yes'</span>, <span class="string">'No'</span>, <span class="string">'No'</span>);
+        <span class="keyword">if</span> strcmpi(save_to_excel, <span class="string">'Yes'</span>)
+            filename = <span class="string">'water_quality_data.xlsx'</span>;
+            data = struct2table(water_data);
+            data.Result = {result};
+
+            <span class="keyword">if</span> isfile(filename)
+                writetable(data, filename, <span class="string">'WriteMode'</span>, <span class="string">'append'</span>, <span class="string">'WriteVariableNames'</span>, false);
+            <span class="keyword">else</span>
+                writetable(data, filename);
+            <span class="keyword">end</span>
+            fprintf(<span class="string">'Data has been saved to %s\n'</span>, filename);
+        <span class="keyword">end</span>
+
+        plot_data(water_data, standards);
+
+        test_again = questdlg(<span class="string">'Do you want to test another water sample?'</span>, <span class="string">'Test Again'</span>, <span class="string">'Yes'</span>, <span class="string">'No'</span>, <span class="string">'No'</span>);
+        <span class="keyword">if</span> strcmpi(test_again, <span class="string">'No'</span>)
+            <span class="keyword">break</span>;
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+
+<span class="keyword">function</span> value = get_valid_input(prompt, validation_func, max_attempts)
+    attempts = 0;
+    <span class="keyword">while</span> attempts &lt; max_attempts
+        input_value = input(prompt, <span class="string">'s'</span>);  <span class="comment">% Read input as string</span>
+        <span class="keyword">if</span> isempty(input_value)
+            fprintf(<span class="string">'Invalid input. Please try again.\n'</span>);
+            attempts = attempts + 1;
+            <span class="keyword">continue</span>;
+        <span class="keyword">end</span>
+        value = str2double(input_value);  <span class="comment">% Convert string to number</span>
+        <span class="keyword">if</span> isnan(value)  <span class="comment">% Check if conversion was successful</span>
+            fprintf(<span class="string">'Invalid input. Please enter a numeric value.\n'</span>);
+            attempts = attempts + 1;
+            <span class="keyword">continue</span>;
+        <span class="keyword">end</span>
+        <span class="keyword">if</span> validation_func(value)  <span class="comment">% Validate the numeric value</span>
+            <span class="keyword">return</span>;
+        <span class="keyword">else</span>
+            fprintf(<span class="string">'Invalid input. Please try again.\n'</span>);
+            attempts = attempts + 1;
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    error(<span class="string">'Maximum attempts exceeded. Exiting program.'</span>);
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> plot_data(water_data, standards)
+    <span class="comment">% Define the parameters and their values</span>
+    parameters = {<span class="string">'pH'</span>, <span class="string">'turbidity'</span>, <span class="string">'tds'</span>, <span class="string">'hardness'</span>, <span class="string">'sulphates'</span>, <span class="string">'bod'</span>, <span class="string">'cod'</span>, <span class="string">'do'</span>, <span class="string">'nitrate'</span>, <span class="string">'alkalinity'</span>};
+    user_values = [water_data.pH, water_data.turbidity, water_data.tds, water_data.hardness, <span class="keyword">...</span>
+                   water_data.sulphates, water_data.bod, water_data.cod, water_data.do, <span class="keyword">...</span>
+                   water_data.nitrate, water_data.alkalinity];
+    standard_values = [mean(standards.pH), standards.turbidity, standards.tds, standards.hardness, <span class="keyword">...</span>
+                       standards.sulphates, standards.bod, standards.cod, mean(standards.do), <span class="keyword">...</span>
+                       standards.nitrate, standards.alkalinity];
+
+    <span class="comment">% Create the subplot layout</span>
+    figure;
+
+    <span class="comment">% Add subplots for parameter comparison</span>
+    <span class="keyword">for</span> i = 1:length(parameters)
+        subplot(3, 4, i);  <span class="comment">% Create a 3x4 grid of subplots for parameter comparison</span>
+        bar([standard_values(i); user_values(i)]);
+        set(gca, <span class="string">'xticklabel'</span>, {<span class="string">'Standard'</span>, <span class="string">'User'</span>});
+        title(parameters{i});
+        ylabel(<span class="string">'Value'</span>);
+        <span class="keyword">if</span> i == 1
+            legend({<span class="string">'Standard'</span>, <span class="string">'User'</span>}, <span class="string">'Location'</span>, <span class="string">'northeastoutside'</span>);
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+    <span class="comment">% Create a separate figure for the 3D plot</span>
+    figure;
+    plot_3d(water_data, standards); <span class="comment">% Call the function to generate the 3D plot</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> plot_3d(water_data, standards)
+    <span class="comment">% Define the parameters and their values</span>
+    parameters = {<span class="string">'pH'</span>, <span class="string">'turbidity'</span>, <span class="string">'tds'</span>, <span class="string">'hardness'</span>, <span class="string">'sulphates'</span>, <span class="string">'bod'</span>, <span class="string">'cod'</span>, <span class="string">'do'</span>, <span class="string">'nitrate'</span>, <span class="string">'alkalinity'</span>};
+    user_values = [water_data.pH, water_data.turbidity, water_data.tds, water_data.hardness, <span class="keyword">...</span>
+                   water_data.sulphates, water_data.bod, water_data.cod, water_data.do, <span class="keyword">...</span>
+                   water_data.nitrate, water_data.alkalinity];
+    standard_values = [mean(standards.pH), standards.turbidity, standards.tds, standards.hardness, <span class="keyword">...</span>
+                       standards.sulphates, standards.bod, standards.cod, mean(standards.do), <span class="keyword">...</span>
+                       standards.nitrate, standards.alkalinity];
+
+    <span class="comment">% Create the 3D bar plot in the current figure</span>
+    bar3([standard_values; user_values]', 0.4);
+    set(gca, <span class="string">'xticklabel'</span>, {<span class="string">'Standard'</span>, <span class="string">'User'</span>});
+    set(gca, <span class="string">'yticklabel'</span>, parameters);
+    zlabel(<span class="string">'Values'</span>);
+    xlabel(<span class="string">'Source'</span>);
+    ylabel(<span class="string">'Parameters'</span>);
+    title(<span class="string">'Water Quality Parameters 3D'</span>);
+    colormap([1 0 0; 0 0 1]); <span class="comment">% Red for standards, Blue for user values</span>
+<span class="keyword">end</span>
+</pre>
+<pre class="codeoutput">Warning: Ignoring extra legend entries. 
+</pre>
+<img vspace="5" hspace="5" src="water_quality_01.png" alt=""> <img vspace="5" hspace="5" src="water_quality_02.png" alt=""> <img vspace="5" hspace="5" src="water_quality_03.png" alt=""> <p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+function get_water_data1()
+    % Define the drinking water standards
+    standards = struct('pH', [6.5, 8.5], 'turbidity', 1, 'tds', 500, ...
+                       'hardness', 200, 'sulphates', 200, ...
+                       'bod', 5, 'cod', 10, 'do', [6.5, 8], ...
+                       'nitrate', 10, 'alkalinity', 200);
+
+    while true
+        choice = menu('Select an option:', ...
+                      'Import data from an Excel file', ...
+                      'Enter data manually', ...
+                      'Exit');
+
+        switch choice
+            case 1
+                [filename, pathname] = uigetfile({'*.xlsx','Excel files (*.xlsx)'},'Select an Excel file');
+                if isequal(filename,0) || isequal(pathname,0)
+                    disp('User canceled the operation');
+                    continue;
+                end
+                fullpath = fullfile(pathname, filename);
+                imported_data = readtable(fullpath);
+                water_data = table2struct(imported_data, 'ToScalar', true);
+            case 2
+                water_data = struct();
+                prompt = {'pH value:', 'Turbidity (NTU):', 'Total Dissolved Solids (mg/l):', ...
+                          'Total Hardness (as CaCO3, mg/l):', 'Sulphates (mg/l):', ...
+                          'BOD (mg/l):', 'COD (mg/l):', 'DO (mg/l):', ...
+                          'Nitrate (mg/l):', 'Total Alkalinity (as CaCO3, mg/l):'};
+                dlg_title = 'Enter Data';
+                num_lines = 1;
+                default_data = {'', '', '', '', '', '', '', '', '', ''};
+                input_data = inputdlg(prompt, dlg_title, num_lines, default_data);
+
+                % Convert input data to numeric values
+                for i = 1:numel(input_data)
+                    water_data.(lower(strrep(prompt{i}, ' ', '_'))) = str2double(input_data{i});
+                end
+            case 3
+                fprintf('Exiting the program.\n');
+                return;
+        end
+
+        save('water_data.mat', 'water_data');
+        is_safe = true;
+
+        % Perform checks...
+
+        if is_safe
+            msgbox('The water meets all the drinking water standards and is considered safe for drinking.', 'Success', 'modal');
+            result = 'Safe';
+        else
+            msgbox('The water does not meet one or more drinking water standards and is not considered safe for drinking.', 'Warning', 'modal');
+            result = 'Not Safe';
+        end
+
+        save_to_excel = questdlg('Do you want to save the data to an Excel file?', 'Save to Excel', 'Yes', 'No', 'No');
+        if strcmpi(save_to_excel, 'Yes')
+            filename = 'water_quality_data.xlsx';
+            data = struct2table(water_data);
+            data.Result = {result};
+
+            if isfile(filename)
+                writetable(data, filename, 'WriteMode', 'append', 'WriteVariableNames', false);
+            else
+                writetable(data, filename);
+            end
+            fprintf('Data has been saved to %s\n', filename);
+        end
+
+        plot_data(water_data, standards);
+
+        test_again = questdlg('Do you want to test another water sample?', 'Test Again', 'Yes', 'No', 'No');
+        if strcmpi(test_again, 'No')
+            break;
+        end
+    end
+end
+
+
+function value = get_valid_input(prompt, validation_func, max_attempts)
+    attempts = 0;
+    while attempts < max_attempts
+        input_value = input(prompt, 's');  % Read input as string
+        if isempty(input_value)
+            fprintf('Invalid input. Please try again.\n');
+            attempts = attempts + 1;
+            continue;
+        end
+        value = str2double(input_value);  % Convert string to number
+        if isnan(value)  % Check if conversion was successful
+            fprintf('Invalid input. Please enter a numeric value.\n');
+            attempts = attempts + 1;
+            continue;
+        end
+        if validation_func(value)  % Validate the numeric value
+            return;
+        else
+            fprintf('Invalid input. Please try again.\n');
+            attempts = attempts + 1;
+        end
+    end
+    error('Maximum attempts exceeded. Exiting program.');
+end
+
+function plot_data(water_data, standards)
+    % Define the parameters and their values
+    parameters = {'pH', 'turbidity', 'tds', 'hardness', 'sulphates', 'bod', 'cod', 'do', 'nitrate', 'alkalinity'};
+    user_values = [water_data.pH, water_data.turbidity, water_data.tds, water_data.hardness, ...
+                   water_data.sulphates, water_data.bod, water_data.cod, water_data.do, ...
+                   water_data.nitrate, water_data.alkalinity];
+    standard_values = [mean(standards.pH), standards.turbidity, standards.tds, standards.hardness, ...
+                       standards.sulphates, standards.bod, standards.cod, mean(standards.do), ...
+                       standards.nitrate, standards.alkalinity];
+
+    % Create the subplot layout
+    figure;
+
+    % Add subplots for parameter comparison
+    for i = 1:length(parameters)
+        subplot(3, 4, i);  % Create a 3x4 grid of subplots for parameter comparison
+        bar([standard_values(i); user_values(i)]);
+        set(gca, 'xticklabel', {'Standard', 'User'});
+        title(parameters{i});
+        ylabel('Value');
+        if i == 1
+            legend({'Standard', 'User'}, 'Location', 'northeastoutside');
+        end
+    end
+
+    % Create a separate figure for the 3D plot
+    figure;
+    plot_3d(water_data, standards); % Call the function to generate the 3D plot
+end
+
+function plot_3d(water_data, standards)
+    % Define the parameters and their values
+    parameters = {'pH', 'turbidity', 'tds', 'hardness', 'sulphates', 'bod', 'cod', 'do', 'nitrate', 'alkalinity'};
+    user_values = [water_data.pH, water_data.turbidity, water_data.tds, water_data.hardness, ...
+                   water_data.sulphates, water_data.bod, water_data.cod, water_data.do, ...
+                   water_data.nitrate, water_data.alkalinity];
+    standard_values = [mean(standards.pH), standards.turbidity, standards.tds, standards.hardness, ...
+                       standards.sulphates, standards.bod, standards.cod, mean(standards.do), ...
+                       standards.nitrate, standards.alkalinity];
+
+    % Create the 3D bar plot in the current figure
+    bar3([standard_values; user_values]', 0.4);
+    set(gca, 'xticklabel', {'Standard', 'User'});
+    set(gca, 'yticklabel', parameters);
+    zlabel('Values');
+    xlabel('Source');
+    ylabel('Parameters');
+    title('Water Quality Parameters 3D'); 
+    colormap([1 0 0; 0 0 1]); % Red for standards, Blue for user values
+end
+
+##### SOURCE END #####
+-->
+</body>
+</html>
